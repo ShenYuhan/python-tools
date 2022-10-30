@@ -27,7 +27,7 @@ with open("./wifi_crack/这里没有存密码.txt", "r") as fp:
         tmp_profile = iface.add_network_profile(profile)
         iface.connect(tmp_profile)
         if iface.status() == pywifi.const.IFACE_CONNECTED:
-            print("恭喜你已经连接上wifi ", profile.ssid, " 了！")
+            print("恭喜你已经连接上wifi ", profile.ssid, " 了！密码是", profile.key)
             break
         profile.key = fp.readline()
 
