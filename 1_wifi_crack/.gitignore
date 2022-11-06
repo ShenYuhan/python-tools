@@ -1,0 +1,5 @@
+*.pyc
+*.exe
+build/
+dist/
+baiduyun_unit.py
