@@ -62,7 +62,7 @@ class MainWindowRun(Ui_mainWindow.Ui_MainWindow, QtWidgets.QMainWindow):
         # 设置默认打开路径
         dir.setDirectory(".")
         # 设置能打开的文件类型
-        dir.setNameFilter("密码文件(*.dict)")
+        dir.setNameFilter("密码文件(*.*)")
         # 判断是否选择了文件
         if dir.exec():
             self.lineEdit.setText(dir.selectedFiles()[0])

@@ -37,7 +37,7 @@ class Qt_pet(QtWidgets.QWidget):
     
     # 获取放图片的路径，图片文件必须放在D:/Program Files (x86)/pet_conf/或者D:/Program Files/pet_conf/中，在里面放一个名为 imgN（比如img1，img2，img3的文件夹）的文件夹，文件夹中放具体的图片，图片的格式为N.png(比如1.png，2.png等)
     def get_conf_dir(self):
-        conf_dirs = ["D:/Program Files (x86)/pet_conf/", "D:/Program Files/pet_conf/"]
+        conf_dirs = ["D:/Program Files (x86)/pet_conf/", "D:/Program Files/pet_conf/", "C:/Program Files/pet_conf/", "C:/Program Files (x86)/pet_conf/"]
         for conf_dir in conf_dirs:
             if os.path.exists(conf_dir) and os.path.isdir(conf_dir):
                 self.conf_dir = conf_dir
