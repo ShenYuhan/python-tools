@@ -1,4 +1,5 @@
 *.exe
 dist/
 build/
-.spec
+*.spec
+*.pyc
