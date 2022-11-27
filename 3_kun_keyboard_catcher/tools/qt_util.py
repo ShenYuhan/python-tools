@@ -45,7 +45,9 @@ class MainWidgets(QtWidgets.QWidget):
             'N': resource_path(os.path.join("audios", "n.mp3")),
             'T': resource_path(os.path.join("audios", "t.mp3")),
             'M': resource_path(os.path.join("audios", "m.mp3")),
-            'jntm': resource_path(os.path.join("audios", "ngm.mp3"))
+            'jntm': resource_path(os.path.join("audios", "ngm.mp3")),
+            'a': resource_path(os.path.join("audios", "a.mp3")),
+            'A': resource_path(os.path.join("audios", "a.mp3"))
         }
         self.init_monitor()
         
