@@ -1,0 +1,3 @@
+playsound==1.2.2
+pynput==1.7.6
+PyQt5==5.15.7
