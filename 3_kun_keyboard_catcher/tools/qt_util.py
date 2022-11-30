@@ -2,11 +2,13 @@
 import functools
 import sys
 import os
+from concurrent.futures import ThreadPoolExecutor
+
 from PyQt5 import QtGui, QtWidgets, QtCore
-import monitor
 from pynput.keyboard import Key
-import playsound
-import threading
+import pygame
+
+import monitor
 
 # 得到当前执行文件同级目录的其他文件绝对路径
 def resource_path(relative_path):
@@ -28,12 +30,38 @@ class MainWidgets(QtWidgets.QWidget):
         self.lab_content.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.lab = QtWidgets.QLabel(self)
 
+        self.font_big = QtGui.QFont()
+        self.font_big.setFamily("微软雅黑")
+        self.font_big.setPixelSize(35)
+        self.font_big.setBold(True)
+
+        self.font_small = QtGui.QFont()
+        self.font_small.setFamily("微软雅黑")
+        self.font_small.setPixelSize(25)
+        self.font_small.setBold(True)
+
         # 定时器，用于长时间不输入清空输入状态和闭嘴
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.reset_char)
         # 3秒定时清除文字
         self.timer.start(3000)
 
+        # 初始化图片和音频
+        self.init_resources()
+        # 初始化监视器
+        self.init_monitor()
+        # 初始化窗口
+        self.windowinit()
+        # 初始化右下角角标
+        self.icon_quit()
+        # 创建线程池
+        self.init_thread_pool()
+        # 初始化pygame
+        pygame.mixer.init()
+
+    def init_resources(self):
+        self.img_close_mouth = QtGui.QPixmap(resource_path(os.path.join("imgs", "cai1.png")))
+        self.img_open_mouth = QtGui.QPixmap(resource_path(os.path.join("imgs", "cai2.png")))
         # 字母与音频对应关系
         self.ch2audio = {
             # 'j': os.path.join(os.path.dirname(os.path.abspath(__file__)), "audios", "j.mp3"),
@@ -47,10 +75,36 @@ class MainWidgets(QtWidgets.QWidget):
             'M': resource_path(os.path.join("audios", "m.mp3")),
             'jntm': resource_path(os.path.join("audios", "ngm.mp3"))
         }
-        self.init_monitor()
-        
-        self.windowinit()
-        self.icon_quit()
+        self.hot_keys_func_map = {
+            "<ctrl>+j": functools.partial(self.play_audio, path=self.ch2audio["jntm"])
+            # "<ctrl>+j": self.play_ngm
+        }
+        # 如果对应位置有图片资源则使用其代替闭嘴、张嘴图; 如果有对应音频则替换键盘按键
+        # 图片命名：
+        #   0.jpg：闭嘴；1.jpg：张嘴
+        # 音频命名：
+        #   a.mp3: 键盘a和A摁下发出的声音；b.mp3: 键盘b和B摁下发出的声音
+        #   c_a.mp3: 键盘ctrl+a快捷键发出的声音；c_b.mp3: 键盘ctrl+b快捷键发出的声音
+        conf_dirs = ["D:/ikun/", "D:/Program Files (x86)/ikun/", "D:/Program Files/ikun/", "C:/Program Files/ikun/", "C:/Program Files (x86)/ikun/"]
+        for conf_dir in conf_dirs:
+            if os.path.exists(conf_dir) and os.path.isdir(conf_dir):
+                if os.path.exists(os.path.join(conf_dir, "0.jpg")):
+                    self.img_close_mouth = QtGui.QPixmap(os.path.join(conf_dir, "0.jpg"))
+                if os.path.exists(os.path.join(conf_dir, "1.jpg")):
+                    self.img_open_mouth = QtGui.QPixmap(os.path.join(conf_dir, "1.jpg"))
+                for root, _, files in os.walk(conf_dir):
+                    for path in files:
+                        print(path, os.path.splitext(path))
+                        if os.path.splitext(path)[-1] == ".mp3":
+                            print("111")
+                            print("path = ", path)
+                            self.ch2audio.update({os.path.splitext(path)[0]: os.path.join(root, path)})
+                            if os.path.splitext(path)[0].startswith("c_"):
+                                self.hot_keys_func_map.update({"<ctrl>+{}".format(str(os.path.splitext(path)[0]).split('_')[-1]): functools.partial(self.play_audio, path=self.ch2audio[os.path.splitext(path)[0]])})
+        print("ch2audio = ", self.ch2audio)       
+
+    def init_thread_pool(self, max_workers=None):
+        self.pool = ThreadPoolExecutor(max_workers=max_workers)
 
     # 版本提示
     def version_content(self):
@@ -63,10 +117,8 @@ class MainWidgets(QtWidgets.QWidget):
 
     # 松开键盘时
     def on_release(self, key):
-        # self.lab_content.setText("")
-        # self.lab_content.adjustSize()
         # 闭嘴
-        self.lab.setPixmap(QtGui.QPixmap(resource_path(os.path.join("imgs", "cai1.png"))))
+        self.lab.setPixmap(self.img_close_mouth)
 
     # 摁下键盘时
     def on_press(self, key):
@@ -78,11 +130,7 @@ class MainWidgets(QtWidgets.QWidget):
 
 
     def init_monitor(self):
-        hot_keys_func_map = {
-            "<ctrl>+j": functools.partial(self.play_radio, path=self.ch2audio["jntm"])
-            # "<ctrl>+j": self.play_ngm
-        }
-        self.monitor = monitor.KeyBoardLister(on_press_func=self.on_press, on_release_func=self.on_release, hot_keys_func_map=hot_keys_func_map)
+        self.monitor = monitor.KeyBoardLister(on_press_func=self.on_press, on_release_func=self.on_release, hot_keys_func_map=self.hot_keys_func_map)
     
     def windowinit(self):
         # 初始窗口设置大一点以免放入的图片显示不全
@@ -96,11 +144,7 @@ class MainWidgets(QtWidgets.QWidget):
         self.setWindowTitle('坤音键盘-by 走神的阿圆')
 
         # 显示字母
-        font = QtGui.QFont()
-        font.setFamily("微软雅黑")
-        font.setPixelSize(35)
-        font.setBold(True)
-        self.lab_content.setFont(font)
+        self.lab_content.setFont(self.font_big)
         self.lab_content.setStyleSheet("color:black;")
         self.lab_content.move(38, 28)
 
@@ -110,7 +154,7 @@ class MainWidgets(QtWidgets.QWidget):
         
         # 坤人
         self.lab.move(50, 50)
-        self.lab.setPixmap(QtGui.QPixmap(resource_path(os.path.join("imgs", "cai1.png"))))
+        self.lab.setPixmap(self.img_close_mouth)
 
         
         # 设置窗口为 无边框 | 保持顶部显示 | 任务栏不显示图标
@@ -119,42 +163,40 @@ class MainWidgets(QtWidgets.QWidget):
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True)
         self.show()
 
+    # 使用pygame播放
+    def play_sound(self, path):
+       pygame.mixer.Sound(path).play()
+
     # 开线程放音乐，避免阻断主流程，实现可以同时放多个radio
-    def play_radio(self, path):
-        t = threading.Thread(target=playsound.playsound, args=(path,))
-        t.start()
+    def play_audio(self, path):
+        # 1 不使用线程池
+        # t = threading.Thread(target=self.test, args=(path,))
+        # t.start()
+        # 2 使用线程池
+        self.pool.submit(self.play_sound, path)
+
     
     def set_char(self, ch):
         if ch is None:
             return
         if ch in self.ch2audio:
-            self.play_radio(self.ch2audio[ch])
+            self.play_audio(self.ch2audio[ch])
         if ch == "j" or ch == "J":
             ch = "只因"
 
         # 设置字母
         if len(ch) == 1:
             # 显示字母
-            font = QtGui.QFont()
-            font.setFamily("微软雅黑")
-            font.setPixelSize(35)
-            font.setBold(True)
-            self.lab_content.setFont(font)
-            self.lab_content.setStyleSheet("color:black;")
+            self.lab_content.setFont(self.font_big)
             self.lab_content.move(40, 28)
         else:
             # 显示字母
-            font = QtGui.QFont()
-            font.setFamily("微软雅黑")
-            font.setPixelSize(25)
-            font.setBold(True)
-            self.lab_content.setFont(font)
-            self.lab_content.setStyleSheet("color:black;")
+            self.lab_content.setFont(self.font_small)
             self.lab_content.move(28, 28)
         self.lab_content.setText(ch)
         self.lab_content.adjustSize()
         # 张嘴
-        self.lab.setPixmap(QtGui.QPixmap(resource_path(os.path.join("imgs", "cai2.png"))))
+        self.lab.setPixmap(self.img_open_mouth)
 
 
     # 长时间没有触发则要回归到最初状态
@@ -163,7 +205,7 @@ class MainWidgets(QtWidgets.QWidget):
         self.lab_content.setText("")
         self.lab_content.adjustSize()
         # 闭嘴
-        self.lab.setPixmap(QtGui.QPixmap(resource_path(os.path.join("imgs", "cai1.png"))))
+        self.lab.setPixmap(self.img_close_mouth)
 
 
     # 此函数和mouseMoveEvent配合可以完成拖动功能

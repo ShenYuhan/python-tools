@@ -26,7 +26,20 @@ def winCommand(*command):
         return buf.value
 ```
 
-### 2 版本迭代
+### 2 使用方法
+#### 2.1 自定义图片
+在D盘创建一个ikun文件夹，放入名为0.jpg和1.jpg的图片，可以代替闭嘴和张嘴时的图片  
+#### 2.2 自定义音频
+在D盘创建一个ikun文件夹，放入名为a.mp3的音频，可以在摁下“a”的时候播放；放入名为c_a.mp3的音频，则可以在摁下“CTRL+A”快捷键的时候播放。  
+
+![image](./img/auto_resource_demo.png)  
+
+### 3 版本迭代
+
+v1.3
+ - 支持自定义按键、快捷键声音和图片，方式见使用方法
+ - 使用线程池降低资源开销
+ - 由于playsound有不释放资源的bug，使用pygame代替playsound
 
 v1.2
  - 任务栏不再显示图标

@@ -1,4 +1,4 @@
 PyQt5
-playsound == 1.2.2
+pygame
 pynput
 pyinstaller
