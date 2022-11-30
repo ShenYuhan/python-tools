@@ -49,3 +49,5 @@ v1.1
  - 解决windows下由于playsound库使用utf8编码导致无法正常播放音频的问题  
 
 
+### 4 友情链接
+iKun表情包：https://github.com/wzwtt/ikun  
