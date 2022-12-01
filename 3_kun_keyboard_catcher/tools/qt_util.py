@@ -94,14 +94,10 @@ class MainWidgets(QtWidgets.QWidget):
                     self.img_open_mouth = QtGui.QPixmap(os.path.join(conf_dir, "1.jpg"))
                 for root, _, files in os.walk(conf_dir):
                     for path in files:
-                        print(path, os.path.splitext(path))
                         if os.path.splitext(path)[-1] == ".mp3":
-                            print("111")
-                            print("path = ", path)
                             self.ch2audio.update({os.path.splitext(path)[0]: os.path.join(root, path)})
                             if os.path.splitext(path)[0].startswith("c_"):
-                                self.hot_keys_func_map.update({"<ctrl>+{}".format(str(os.path.splitext(path)[0]).split('_')[-1]): functools.partial(self.play_audio, path=self.ch2audio[os.path.splitext(path)[0]])})
-        print("ch2audio = ", self.ch2audio)       
+                                self.hot_keys_func_map.update({"<ctrl>+{}".format(str(os.path.splitext(path)[0]).split('_')[-1]): functools.partial(self.play_audio, path=self.ch2audio[os.path.splitext(path)[0]])})      
 
     def init_thread_pool(self, max_workers=None):
         self.pool = ThreadPoolExecutor(max_workers=max_workers)
