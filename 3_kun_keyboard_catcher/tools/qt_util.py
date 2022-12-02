@@ -47,7 +47,7 @@ class MainWidgets(QtWidgets.QWidget):
         self.timer.start(3000)
 
         # 历史输入
-        self.history_input = "######"
+        self.history_input = "#####"
         self.close_key = "nmyjj"
 
         # 是否打开声音
@@ -190,8 +190,6 @@ class MainWidgets(QtWidgets.QWidget):
             return
         if ch in self.ch2audio:
             self.play_audio(self.ch2audio[ch])
-        if ch == "j" or ch == "J":
-            ch = "只因"
 
         # 设置字母
         if len(ch) == 1:
