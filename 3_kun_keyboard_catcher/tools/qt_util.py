@@ -46,6 +46,12 @@ class MainWidgets(QtWidgets.QWidget):
         # 3秒定时清除文字
         self.timer.start(3000)
 
+        # 历史输入
+        self.history_input = "######"
+        self.close_key = "nmyjj"
+
+        # 是否打开声音
+        self.sound_flag = True
         # 初始化图片和音频
         self.init_resources()
         # 初始化监视器
@@ -66,6 +72,8 @@ class MainWidgets(QtWidgets.QWidget):
         self.ch2audio = {
             # 'j': os.path.join(os.path.dirname(os.path.abspath(__file__)), "audios", "j.mp3"),
             'j': resource_path(os.path.join("audios", "j.mp3")),
+            # 'e': resource_path(os.path.join("audios", "e.mp3")),
+            # 'h': resource_path(os.path.join("audios", "h.mp3")),
             'n': resource_path(os.path.join("audios", "n.mp3")),
             't': resource_path(os.path.join("audios", "t.mp3")),
             'm': resource_path(os.path.join("audios", "m.mp3")),
@@ -73,7 +81,9 @@ class MainWidgets(QtWidgets.QWidget):
             'N': resource_path(os.path.join("audios", "n.mp3")),
             'T': resource_path(os.path.join("audios", "t.mp3")),
             'M': resource_path(os.path.join("audios", "m.mp3")),
-            'jntm': resource_path(os.path.join("audios", "ngm.mp3"))
+            'jntm': resource_path(os.path.join("audios", "ngm.mp3")),
+            'nmyjj': resource_path(os.path.join("audios", "ngm.mp3"))
+            # '114514': resource_path(os.path.join("audios", "114514.mp3"))
         }
         self.hot_keys_func_map = {
             "<ctrl>+j": functools.partial(self.play_audio, path=self.ch2audio["jntm"])
@@ -81,17 +91,17 @@ class MainWidgets(QtWidgets.QWidget):
         }
         # 如果对应位置有图片资源则使用其代替闭嘴、张嘴图; 如果有对应音频则替换键盘按键
         # 图片命名：
-        #   0.jpg：闭嘴；1.jpg：张嘴
+        #   0.png：闭嘴；1.png：张嘴
         # 音频命名：
         #   a.mp3: 键盘a和A摁下发出的声音；b.mp3: 键盘b和B摁下发出的声音
         #   c_a.mp3: 键盘ctrl+a快捷键发出的声音；c_b.mp3: 键盘ctrl+b快捷键发出的声音
         conf_dirs = ["D:/ikun/", "D:/Program Files (x86)/ikun/", "D:/Program Files/ikun/", "C:/Program Files/ikun/", "C:/Program Files (x86)/ikun/"]
         for conf_dir in conf_dirs:
             if os.path.exists(conf_dir) and os.path.isdir(conf_dir):
-                if os.path.exists(os.path.join(conf_dir, "0.jpg")):
-                    self.img_close_mouth = QtGui.QPixmap(os.path.join(conf_dir, "0.jpg"))
-                if os.path.exists(os.path.join(conf_dir, "1.jpg")):
-                    self.img_open_mouth = QtGui.QPixmap(os.path.join(conf_dir, "1.jpg"))
+                if os.path.exists(os.path.join(conf_dir, "0.png")):
+                    self.img_close_mouth = QtGui.QPixmap(os.path.join(conf_dir, "0.png"))
+                if os.path.exists(os.path.join(conf_dir, "1.png")):
+                    self.img_open_mouth = QtGui.QPixmap(os.path.join(conf_dir, "1.png"))
                 for root, _, files in os.walk(conf_dir):
                     for path in files:
                         if os.path.splitext(path)[-1] == ".mp3":
@@ -104,7 +114,7 @@ class MainWidgets(QtWidgets.QWidget):
 
     # 版本提示
     def version_content(self):
-        QtWidgets.QMessageBox.information(self, "坤音键盘v1.0", "抖音/B站：走神的阿圆 QQ群:766402914",
+        QtWidgets.QMessageBox.information(self, "坤音键盘v1.3", "抖音/B站：走神的阿圆 QQ群:766402914",
                                 QtWidgets.QMessageBox.StandardButton.Yes)
 
     # 弹出提示
@@ -115,6 +125,7 @@ class MainWidgets(QtWidgets.QWidget):
     def on_release(self, key):
         # 闭嘴
         self.lab.setPixmap(self.img_close_mouth)
+        self.lab.adjustSize()
 
     # 摁下键盘时
     def on_press(self, key):
@@ -151,6 +162,7 @@ class MainWidgets(QtWidgets.QWidget):
         # 坤人
         self.lab.move(50, 50)
         self.lab.setPixmap(self.img_close_mouth)
+        self.lab.adjustSize()
 
         
         # 设置窗口为 无边框 | 保持顶部显示 | 任务栏不显示图标
@@ -169,7 +181,8 @@ class MainWidgets(QtWidgets.QWidget):
         # t = threading.Thread(target=self.test, args=(path,))
         # t.start()
         # 2 使用线程池
-        self.pool.submit(self.play_sound, path)
+        if self.sound_flag:
+            self.pool.submit(self.play_sound, path)
 
     
     def set_char(self, ch):
@@ -185,6 +198,12 @@ class MainWidgets(QtWidgets.QWidget):
             # 显示字母
             self.lab_content.setFont(self.font_big)
             self.lab_content.move(40, 28)
+            # 只有单字母才计入历史，模拟定长队列加新的第一位
+            self.history_input = self.history_input[1:] + ch
+            if self.history_input[len(self.history_input)-len(self.close_key):] == self.close_key:
+
+                self.play_audio(self.ch2audio[self.close_key])
+                # raise RuntimeError("你这个假ikun！")
         else:
             # 显示字母
             self.lab_content.setFont(self.font_small)
@@ -193,6 +212,7 @@ class MainWidgets(QtWidgets.QWidget):
         self.lab_content.adjustSize()
         # 张嘴
         self.lab.setPixmap(self.img_open_mouth)
+        self.lab.adjustSize()
 
 
     # 长时间没有触发则要回归到最初状态
@@ -202,6 +222,7 @@ class MainWidgets(QtWidgets.QWidget):
         self.lab_content.adjustSize()
         # 闭嘴
         self.lab.setPixmap(self.img_close_mouth)
+        self.lab.adjustSize()
 
 
     # 此函数和mouseMoveEvent配合可以完成拖动功能
@@ -228,13 +249,23 @@ class MainWidgets(QtWidgets.QWidget):
 
         version_menu =  QtWidgets.QAction('作者', self, triggered=self.version_content)
         tpMenu.addAction(version_menu)
-        quit_menu_qq = QtWidgets.QAction('QQ群', self, triggered=self.open_qq_group)
+        quit_menu_qq = QtWidgets.QAction('获取更多', self, triggered=self.open_qq_group)
         tpMenu.addAction(quit_menu_qq)
+        self.sound_key_menu = QtWidgets.QAction('关闭声音', self, triggered=self.change_sound)
+        tpMenu.addAction(self.sound_key_menu)
         quit_menu = QtWidgets.QAction('退出', self, triggered=self.quit)
         tpMenu.addAction(quit_menu)
 
         mini_icon.setContextMenu(tpMenu)
         mini_icon.show()
+    
+    def change_sound(self):
+        if self.sound_key_menu.text() == "关闭声音":
+            self.sound_flag = False
+            self.sound_key_menu.setText("打开声音")
+        elif self.sound_key_menu.text() == "打开声音":
+            self.sound_flag = True
+            self.sound_key_menu.setText("关闭声音")
 
     def quit(self):
         self.close()
