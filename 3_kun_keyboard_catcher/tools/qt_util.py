@@ -70,23 +70,28 @@ class MainWidgets(QtWidgets.QWidget):
         self.img_open_mouth = QtGui.QPixmap(resource_path(os.path.join("imgs", "cai2.png")))
         # 字母与音频对应关系
         self.ch2audio = {
-            # 'j': os.path.join(os.path.dirname(os.path.abspath(__file__)), "audios", "j.mp3"),
-            'j': resource_path(os.path.join("audios", "j.mp3")),
             # 'e': resource_path(os.path.join("audios", "e.mp3")),
             # 'h': resource_path(os.path.join("audios", "h.mp3")),
-            'n': resource_path(os.path.join("audios", "n.mp3")),
-            't': resource_path(os.path.join("audios", "t.mp3")),
-            'm': resource_path(os.path.join("audios", "m.mp3")),
+            # '114514': resource_path(os.path.join("audios", "114514.mp3")),
+            '1': resource_path(os.path.join("audios", "1.mp3")),
+            'b': resource_path(os.path.join("audios", "b.mp3")),
+            'c': resource_path(os.path.join("audios", "c.mp3")),
+            'k': resource_path(os.path.join("audios", "k.mp3")),
+            'l': resource_path(os.path.join("audios", "l.mp3")),
+            'r': resource_path(os.path.join("audios", "r.mp3")),
+            'j': resource_path(os.path.join("audios", "j.mp3")),
             'J': resource_path(os.path.join("audios", "j.mp3")),
+            'n': resource_path(os.path.join("audios", "n.mp3")),
             'N': resource_path(os.path.join("audios", "n.mp3")),
+            't': resource_path(os.path.join("audios", "t.mp3")),
             'T': resource_path(os.path.join("audios", "t.mp3")),
+            'm': resource_path(os.path.join("audios", "m.mp3")),
             'M': resource_path(os.path.join("audios", "m.mp3")),
             'jntm': resource_path(os.path.join("audios", "ngm.mp3")),
-            'nmyjj': resource_path(os.path.join("audios", "ngm.mp3"))
-            # '114514': resource_path(os.path.join("audios", "114514.mp3"))
+            'nmyjj': resource_path(os.path.join("audios", "ngm.mp3")),
         }
         self.hot_keys_func_map = {
-            "<ctrl>+j": functools.partial(self.play_audio, path=self.ch2audio["jntm"])
+            # "<ctrl>+j": functools.partial(self.play_audio, path=self.ch2audio["jntm"])
             # "<ctrl>+j": self.play_ngm
         }
         # 如果对应位置有图片资源则使用其代替闭嘴、张嘴图; 如果有对应音频则替换键盘按键
