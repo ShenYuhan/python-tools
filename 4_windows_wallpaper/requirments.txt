@@ -1,0 +1,4 @@
+pywin32
+PyQt5
+pyinstaller
+opencv-python
