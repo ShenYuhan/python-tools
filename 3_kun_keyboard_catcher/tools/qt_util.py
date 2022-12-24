@@ -164,7 +164,7 @@ class MainWidgets(QtWidgets.QWidget):
 
         # 设置窗口为 无边框 | 保持顶部显示 | 任务栏不显示图标
         self.setWindowFlags(
-                QtCore.Qt.WindowType.FramelessWindowHint|QtCore.Qt.WindowType.WindowStaysOnTopHint|QtCore.Qt.WindowType.Tool|QtCore.Qt.WindowType.Tool
+                QtCore.Qt.WindowType.FramelessWindowHint|QtCore.Qt.WindowType.WindowStaysOnTopHint|QtCore.Qt.WindowType.WindowStaysOnTopHint|QtCore.Qt.WindowType.Tool
                 )
         # # 设置窗口透明
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True)
