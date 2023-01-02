@@ -12,6 +12,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
+        MainWindow.setWindowIcon(QtGui.QIcon("D:/program/python-tools/4_windows_wallpaper/yuan.ico"))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
@@ -39,7 +40,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "超元气桌面v1.0-by走神的阿圆"))
         self.pushButton.setText(_translate("MainWindow", "选择视频"))
         self.pushButton_2.setText(_translate("MainWindow", "预览"))
         self.pushButton_3.setText(_translate("MainWindow", "应用"))

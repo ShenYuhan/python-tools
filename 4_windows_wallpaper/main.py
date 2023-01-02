@@ -197,6 +197,9 @@ class WallPaper(Ui_design.Ui_MainWindow, QtWidgets.QMainWindow):
         self.pushButton_2.clicked.disconnect()
         self.pushButton_2.clicked.connect(self.playVideo)
         self.pushButton.setEnabled(True)
+        # 关闭通过0x052c打开的workerw层
+        if self.worker_id != 0:
+            win32gui.SendMessage(self.worker_id, 0x0010, 0, 0)  # WM_CLOSE
 
     # 初始化壁纸
     def initWallPaper(self):
