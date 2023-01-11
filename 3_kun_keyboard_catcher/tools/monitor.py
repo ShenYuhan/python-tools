@@ -7,7 +7,7 @@ class KeyBoardLister():
         if hot_keys_func_map is not None:
             self.start_monitor_hotkey(hot_keys_func_map)
         self.start_monitor_keyboard()
-        
+
     # 键盘监测
     def start_monitor_keyboard(self):
         self.listener = Listener(on_press=self.on_press, on_release=self.on_release)

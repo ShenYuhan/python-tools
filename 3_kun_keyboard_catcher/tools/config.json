@@ -1,0 +1,8 @@
+{
+    "init_ch2audio_from_files": true,
+    "init_ch2audio_from_config": true,
+    "init_ch2audio_config": {
+        "jntm": "ngm.mp3",
+        "nmyjj": "ngm.mp3"
+    }
+}
