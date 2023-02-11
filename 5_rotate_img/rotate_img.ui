@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>审核快乐器v2.0 by 走神的阿圆</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="pushButton">
@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>90</y>
+      <y>70</y>
       <width>91</width>
       <height>23</height>
      </rect>
@@ -54,7 +54,7 @@
     <property name="geometry">
      <rect>
       <x>190</x>
-      <y>90</y>
+      <y>70</y>
       <width>401</width>
       <height>20</height>
      </rect>
@@ -70,14 +70,14 @@
      </rect>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>440</y>
+      <y>430</y>
       <width>54</width>
       <height>12</height>
      </rect>
@@ -90,7 +90,7 @@
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>436</y>
+      <y>426</y>
       <width>61</width>
       <height>20</height>
      </rect>
@@ -100,20 +100,20 @@
     <property name="geometry">
      <rect>
       <x>190</x>
-      <y>440</y>
-      <width>54</width>
-      <height>12</height>
+      <y>430</y>
+      <width>151</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>张</string>
+     <string>张(输入1-360之间的整数)</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
       <x>36</x>
-      <y>470</y>
+      <y>460</y>
       <width>81</width>
       <height>20</height>
      </rect>
@@ -126,7 +126,7 @@
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>470</y>
+      <y>460</y>
       <width>61</width>
       <height>20</height>
      </rect>
@@ -136,20 +136,20 @@
     <property name="geometry">
      <rect>
       <x>190</x>
-      <y>470</y>
-      <width>54</width>
+      <y>460</y>
+      <width>151</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>秒</string>
+     <string>秒(输入1-3600之间的整数)</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
       <x>36</x>
-      <y>500</y>
+      <y>490</y>
       <width>81</width>
       <height>20</height>
      </rect>
@@ -162,7 +162,7 @@
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>500</y>
+      <y>490</y>
       <width>61</width>
       <height>20</height>
      </rect>
@@ -172,13 +172,13 @@
     <property name="geometry">
      <rect>
       <x>190</x>
-      <y>500</y>
-      <width>54</width>
+      <y>490</y>
+      <width>151</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>秒</string>
+     <string>秒(输入1-3600之间的整数)</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_3">
@@ -194,17 +194,89 @@
      <string>生成视频</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton">
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>100</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>随机图片目录</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_6">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>100</y>
+      <width>401</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>540</y>
+      <width>51</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>移动速度</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_7">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>540</y>
+      <width>61</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>540</y>
+      <width>151</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>（一般设置5-10即可）</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>540</y>
-      <width>361</width>
+      <y>520</y>
+      <width>261</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>输出图片文件（不选择则占用内存较多，选择则占用磁盘较多）</string>
+     <string>图片变换位置（占用内存将增多，大图慎用）</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>555</y>
+      <width>331</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>输出图片文件(可以不选，选中则额外输出中间图片文件）</string>
     </property>
    </widget>
   </widget>
